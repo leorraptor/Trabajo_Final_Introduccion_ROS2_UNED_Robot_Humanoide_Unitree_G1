@@ -42,5 +42,211 @@ Summary: 4 packages finished [30.2s]
   1 package failed: unitree_guide2
   1 package aborted: ros2_unitree_legged_control
   1 package had stderr output: unitree_guide2
+  
+- 23/04/2026
+# SOLUCIÓN: Incluimos los paquetes de controladores y navegación dentro de la carpeta src
+	navigation2-main (https://github.com/ros-navigation/navigation2)
+	ros2_controllers-master (https://github.com/ros-controls/ros2_controllers)
+	ros2_control-master (https://github.com/ros-controls/ros2_control)
+	
+===================================================================================================================================
+
+- 22/04/2026
+# Al intentar subir los archivos del proyecto a Github con 'git push -u origin main' me daba un error de autenticación como que no había introducido el password o el usuario correcto
+
+- 22/04/2026
+# SOLUCIÓN: Utilizar un token de acceso custom, en vez del "fine grained" según se explica en esta discusión; 
+	https://github.com/orgs/community/discussions/71915
+	
+===================================================================================================================================
+
+- 23/04/2026
+# Al utilizar colcon para construir los paquetes que faltaban a la vez que los del paquete principal nos topamos de nuevo con otro problema con respecto a los directorios en CMakeLists.txt de joint_limits probablemente el problema no hubiera surgido de haber añadido las dependencias de una en una
+
+[0.713s] WARNING:colcon.colcon_core.package_selection:Some selected packages are already built in one or more underlay workspaces:
+	'hardware_interface' is in: /opt/ros/humble
+	'controller_interface' is in: /opt/ros/humble
+	'nav2_map_server' is in: /opt/ros/humble
+	'controller_manager' is in: /opt/ros/humble
+	'controller_manager_msgs' is in: /opt/ros/humble
+If a package in a merged underlay workspace is overridden and it installs headers, then all packages in the overlay must sort their include directories by workspace order. Failure to do so may result in build failures or undefined behavior at run time.
+If the overridden package is used by another package in any underlay, then the overriding package in the overlay must be API and ABI compatible or undefined behavior at run time may occur.
+
+If you understand the risks and want to override a package anyways, add the following to the command line:
+	--allow-overriding controller_interface controller_manager controller_manager_msgs hardware_interface nav2_map_server
+
+This may be promoted to an error in a future release of colcon-override-check.
+Starting >>> nav2_common
+Starting >>> joint_limits
+--- stderr: joint_limits
+CMake Error: The source "/home/leorraptor/unitree_G1_sim_ros2/src/ros2_control-master/joint_limits/CMakeLists.txt" does not match the source "/home/leorraptor/unitree_G1_sim_ros2/ros2_control-master/joint_limits/CMakeLists.txt" used to generate cache.  Re-run cmake with a different source directory.
+---
+Failed   <<< joint_limits [0.05s, exited with code 1]
+Aborted  <<< nav2_common [0.05s]
+
+Summary: 0 packages finished [0.73s]
+  1 package failed: joint_limits
+  1 package aborted: nav2_common
+  2 packages had stderr output: joint_limits nav2_common
+  90 packages not processed
+  
+- 24/04/2026
+# Borrar los archivos añadidos al usar 'colcon build --symlink-install' con el objetivo de asegurarnos de que todos los archivos se encuentran el el lugar correcto nos encontramos con este nuevo problema
+
+[1.275s] WARNING:colcon.colcon_core.package_selection:Some selected packages are already built in one or more underlay workspaces:
+	'controller_manager' is in: /opt/ros/humble
+	'nav2_map_server' is in: /opt/ros/humble
+	'controller_manager_msgs' is in: /opt/ros/humble
+	'hardware_interface' is in: /opt/ros/humble
+	'controller_interface' is in: /opt/ros/humble
+If a package in a merged underlay workspace is overridden and it installs headers, then all packages in the overlay must sort their include directories by workspace order. Failure to do so may result in build failures or undefined behavior at run time.
+If the overridden package is used by another package in any underlay, then the overriding package in the overlay must be API and ABI compatible or undefined behavior at run time may occur.
+
+If you understand the risks and want to override a package anyways, add the following to the command line:
+	--allow-overriding controller_interface controller_manager controller_manager_msgs hardware_interface nav2_map_server
+
+This may be promoted to an error in a future release of colcon-override-check.
+Starting >>> nav2_common
+Starting >>> joint_limits
+--- stderr: joint_limits                                         
+CMake Error at CMakeLists.txt:4 (find_package):
+  By not providing "Findros2_control_cmake.cmake" in CMAKE_MODULE_PATH this
+  project has asked CMake to find a package configuration file provided by
+  "ros2_control_cmake", but CMake did not find one.
+
+  Could not find a package configuration file provided by
+  "ros2_control_cmake" with any of the following names:
+
+    ros2_control_cmakeConfig.cmake
+    ros2_control_cmake-config.cmake
+
+  Add the installation prefix of "ros2_control_cmake" to CMAKE_PREFIX_PATH or
+  set "ros2_control_cmake_DIR" to a directory containing one of the above
+  files.  If "ros2_control_cmake" provides a separate development package or
+  SDK, be sure it has been installed.
+
+
+---
+Failed   <<< joint_limits [0.45s, exited with code 1]
+Aborted  <<< nav2_common [0.56s]                            
+
+Summary: 0 packages finished [1.59s]
+  1 package failed: joint_limits
+  1 package aborted: nav2_common
+  1 package had stderr output: joint_limits
+  90 packages not processed
+  
+# El paquete "ros2_control" existe en la ruta '~/unitree_G1_sim_ros2/src/ros2_control-master/ros2_control' pero no estoy muy seguro de por qué le falta la configuración ni como añadir una configuración nueva sin comprometer el paquete.
+
+# Lo cierto es que al abrir el archivo 'CMakeLists.txt' sólo encontramos esto
+
+cmake_minimum_required(VERSION 3.16)
+project(ros2_control)
+
+find_package(ament_cmake REQUIRED)
+ament_package()
+
+# Creo que es suficiente, pero quizás este es el origen del problema
+
+- 24/04/2026
+# Intentar construir el paquete de antemano no ha dado resultado
+
+- 24/04/2026
+# SOLUCIÓN: Estaba intentando instalar paquetes de la rama master en vez de la rama humble, me he dado cuenta gracias a este post 'https://github.com/ros2/rclpy/issues/972'
+
+............................................________........................
+....................................,.-‘”...................``~.,..................
+.............................,.-”...................................“-.,............
+.........................,/...............................................”:,........
+.....................,?......................................................\,.....
+.................../...........................................................,}....
+................./......................................................,:`^`..}....
+.............../...................................................,:”........./.....
+..............?.....__.........................................:`.........../.....
+............./__.(.....“~-,_..............................,:`........../........
+.........../(_....”~,_........“~,_....................,:`........_/...........
+..........{.._$;_......”=,_.......“-,_.......,.-~-,},.~”;/....}...........
+...........((.....*~_.......”=-._......“;,,./`..../”............../............
+...,,,___.\`~,......“~.,....................`.....}............../.............
+............(....`=-,,.......`........................(......;_,,-”...............
+............/.`~,......`-...............................\....../\...................
+.............\`~.*-,.....................................|,./.....\,__...........
+,,_..........}.>-._\...................................|..............`=~-,....
+.....`=~-,_\_......`\,.................................\........................
+...................`=~-,,.\,...............................\.......................
+................................`:,,...........................`\..............__..
+.....................................`=-,...................,%`>--==``.......
+........................................_\..........._,-%.......`\...............
+...................................,<`.._|_,-&``................`\.............. 
 
 ===================================================================================================================================
+
+- 24/04/2026
+# Nuevo problema, sigue sin compilar (┛ಠДಠ)┛彡┻━┻
+
+[0.614s] WARNING:colcon.colcon_core.package_selection:Some selected packages are already built in one or more underlay workspaces:
+	'controller_manager' is in: /opt/ros/humble
+	'controller_interface' is in: /opt/ros/humble
+	'controller_manager_msgs' is in: /opt/ros/humble
+	'nav2_map_server' is in: /opt/ros/humble
+	'hardware_interface' is in: /opt/ros/humble
+If a package in a merged underlay workspace is overridden and it installs headers, then all packages in the overlay must sort their include directories by workspace order. Failure to do so may result in build failures or undefined behavior at run time.
+If the overridden package is used by another package in any underlay, then the overriding package in the overlay must be API and ABI compatible or undefined behavior at run time may occur.
+
+If you understand the risks and want to override a package anyways, add the following to the command line:
+	--allow-overriding controller_interface controller_manager controller_manager_msgs hardware_interface nav2_map_server
+
+This may be promoted to an error in a future release of colcon-override-check.
+Starting >>> nav2_common
+Starting >>> ros2_control_test_assets
+Finished <<< ros2_control_test_assets [0.76s]                    
+Starting >>> hardware_interface
+Finished <<< nav2_common [1.14s]                                   
+Starting >>> nav2_msgs
+[Processing: hardware_interface, nav2_msgs]                                   
+Finished <<< hardware_interface [44.9s]                                        
+Starting >>> controller_manager_msgs
+[Processing: controller_manager_msgs, nav2_msgs]                               
+Finished <<< controller_manager_msgs [51.3s]                                   
+Starting >>> controller_interface
+[Processing: controller_interface, nav2_msgs]                                  
+Finished <<< controller_interface [38.9s]                                      
+Starting >>> hardware_interface_testing                        
+Finished <<< hardware_interface_testing [25.0s]                                
+Starting >>> nav2_voxel_grid
+Finished <<< nav2_voxel_grid [23.3s]                                           
+Starting >>> controller_manager
+Finished <<< nav2_msgs [3min 15s]                                             
+Starting >>> nav2_util
+--- stderr: nav2_util                       
+CMake Error at test/CMakeLists.txt:7 (find_package):
+  By not providing "Findtest_msgs.cmake" in CMAKE_MODULE_PATH this project
+  has asked CMake to find a package configuration file provided by
+  "test_msgs", but CMake did not find one.
+
+  Could not find a package configuration file provided by "test_msgs" with
+  any of the following names:
+
+    test_msgsConfig.cmake
+    test_msgs-config.cmake
+
+  Add the installation prefix of "test_msgs" to CMAKE_PREFIX_PATH or set
+  "test_msgs_DIR" to a directory containing one of the above files.  If
+  "test_msgs" provides a separate development package or SDK, be sure it has
+  been installed.
+
+
+---
+Failed   <<< nav2_util [2.04s, exited with code 1]
+Aborted  <<< controller_manager [2min 24s]                                    
+
+Summary: 8 packages finished [5min 28s]
+  1 package failed: nav2_util
+  1 package aborted: controller_manager
+  2 packages had stderr output: controller_manager nav2_util
+  71 packages not processed
+  
+# Ok, ahora sí que no sé como continuar y ya no me da la cabeza para otra cosa que no sea expresar mi frustración mediante kaomojis y arte ascii
+	
+===================================================================================================================================
+

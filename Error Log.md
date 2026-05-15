@@ -322,6 +322,96 @@ Summary: 5 packages finished [1min 10s]
 # Se supone que la versión que estoy usando de ros y de Ubuntu es la correcta también según lo que pone aquí 'https://www.reddit.com/r/UnitreeG1/comments/1qjzpto/which_ros_does_unitree_g1_supports/' por qué se me está resistiendo tanto!??!?!???!?!
 
 # Me rindo por ahora, volveré cuando reamueble mi cabeza un poco o se me aparezca algún angel de dios con una explicación detallada de como solucionar esto
+
+- 14/05/2026
+# SOLUCIÓN: Siguendo el consejo del profesor e instalando todos los paquetes como Ubuntu manda y no cómo si siguera en Windows, con '$ sudo apt install ros-humble-{El nombre del paquete separado por guiones}', y borrando todos los paquetes de la carpeta, he conseguido construir el paquete
 	
 ===================================================================================================================================
 
+- 14/05/2026
+# Al inicializar el mundo 'test_latest.world' con gazebo mediante 'gazebo --verbose /unitree_G1_sim_ros2/src/go1_sim/go1_gazebo/worlds/test_latest.world' me da el siguiente error:
+
+Gazebo multi-robot simulator, version 11.10.2
+Copyright (C) 2012 Open Source Robotics Foundation.
+Released under the Apache 2 License.
+http://gazebosim.org
+
+[Msg] Waiting for master.
+Gazebo multi-robot simulator, version 11.10.2
+Copyright (C) 2012 Open Source Robotics Foundation.
+Released under the Apache 2 License.
+http://gazebosim.org
+
+[Msg] Waiting for master.
+[Msg] Connected to gazebo master @ http://127.0.0.1:11345
+[Msg] Publicized address: 10.0.2.15
+[Wrn] [SystemPaths.cc:459] File or path does not exist ["/unitree_G1_sim_ros2/src/go1_sim/go1_gazebo/worlds/test_latest.world"] [/unitree_G1_sim_ros2/src/go1_sim/go1_gazebo/worlds/test_latest.world]
+[Err] [Server.cc:472] Could not open file[/unitree_G1_sim_ros2/src/go1_sim/go1_gazebo/worlds/test_latest.world]
+[Wrn] [Server.cc:381] Falling back on worlds/empty.world
+[Msg] Loading world file [/usr/share/gazebo-11/worlds/empty.world]
+[Msg] Connected to gazebo master @ http://127.0.0.1:11345
+[Msg] Publicized address: 10.0.2.15
+[Msg] Warning: Ignoring XDG_SESSION_TYPE=wayland on Gnome. Use QT_QPA_PLATFORM=wayland to run on Wayland anyway.
+[Wrn] [Event.cc:61] Warning: Deleting a connection right after creation. Make sure to save the ConnectionPtr from a Connect call
+^C[Wrn] [Event.cc:61] Warning: Deleting a connection right after creation. Make sure to save the ConnectionPtr from a Connect call
+
+# El problema definitivamente no se debe a abrirlo desde 'cd ~/unitree_G1_sim_ros2', ya que 'gazebo --verbose /src/go1_sim/go1_gazebo/worlds/test_latest.world' tampoco funciona, y tampoco es un problema exclusivo del archivo, pues 'simple_rooms.world' tampoco parece funcionar. El mansaje de error es el mismo
+
+- 14/05/2026
+# SOLUCIÓN: Hacía falta poner "~" al principio del path 
+
+===================================================================================================================================
+
+- 14/05/2026
+# Siguiendo las instrucciones del readme abrimos una consola para poner el comando 'ros2 launch go1_gazebo spawn_go1.launch.py' solo para que nos dé este error:
+
+Package 'go1_gazebo' not found: "package 'go1_gazebo' not found, searching: ['/opt/ros/humble']"
+
+# Estoy un poco bastante hasta las narices de, o ser tan tonto, o de no entender el material para un curso por el que he pagado 200 pavos (o sea, ser tonto por partida doble)
+
+# Creo que la clave se encuentra en esta sección del README:
+
+## Interface
+
+### Subscribed topics (Topics de los Suscriptores, esencialmente usariamos [ para mensajes de Gazebo a ROS)
+
+**Velocity control interface:**
+ The robot simulation is configured to navigate as per velocity commands received on the interface topic.
+- Topic: `/cmd_vel`
+- Message type: [geometry_msgs/Twist](https://docs.ros.org/en/ros2_packages/humble/api/geometry_msgs/interfaces/msg/Twist.html)
+
+
+### Published topics (Topics de los Publicantes, esencialmente usaríamos ] para mensajes de ROS a Gazebo)
+
+**Odometry data:**
+Odometry data from the ground truth plugin
+- Topic: `/odom`
+- Message type: [nav_msgs/Odometry](https://docs.ros.org/en/humble/p/nav_msgs/interfaces/msg/Odometry.html)
+
+
+**2D LiDAR data:**
+2D lidar data from the gazebo sensor plugin
+- Topic: `/scan`
+- Message type: [sensor_msgs/LaserScan](https://docs.ros.org/en/ros2_packages/humble/api/sensor_msgs/interfaces/msg/LaserScan.html)
+
+
+**Transforms:**
+Transforms `odom` -> `base_link` and `base_link` -> `base_footprint` are provided
+ - Topic: `/tf`
+ - Message type: [tf2_msgs/TFMessage](https://docs.ros2.org/foxy/api/tf2_msgs/msg/TFMessage.html)
+ 
+# Ya que aquí se indican los tópicos, y a base de utilizar el comando 'ros2 run ros_gz_bridge parameter_bridge /TOPIC@MENSAJE_ROS@MENSAJE_IGNITION' (como se detalla en la documentación de Gazebo en este enlace: https://gazebosim.org/docs/fortress/ros2_integration/) y quizás un 'echo' para no tener que volver a escribirlos cada vez que se ejecute el programa.
+
+# Por qué estos rodeos en vez de escribitlo y hacer el P*TO TRABAJO?!?!?! Pues es que no me sé el comando de Gazebo con el que hacer el puente. Así que hasta que alguien vuelva a hacer el trabajo por mí supongo que así se queda.
+
+===================================================================================================================================
+
+# NADA DE ESTO TIENE NINGÚN PUTO SENTIDO PORQUE TENGO TODOS LOS PUTOS PROGRAMAS REDIÓS, DE QUE COÑO VA TODO, POR QUÉ CADA VEZ QUE SOLUCIONO UNA COSA O APRENDO COMO VA, VUELVO AL PROBLEMA ORIGINAL Y ME ENCUENTRO QUE NO SIRVE DE NADA
+
+# LITERALMENTE SE SUPONE QUE SÓLO TENGO QUE SEGUIR LOS PASOS, Ctrl + C POR AQUÍ, Ctrl + V POR ALLÍ, PERO ACABO EN HOYOS INSONDABLES DE LOS QUE APENAS PUEDO SALIR, A PESAR DE QUE SIGO LAS INSTRUCCIONES AL PIÉ DE LA LETRA
+
+# COMO COJONES SE SUPONE QUE LA GENTE TRABAJA CON ESTE SISTEMA OPERATIVO CUANDO TIENES QUE SABERTE UN LENGUAJE DE PROGRAMACIÓN PARA APRENDERTE UN SEGUNDO LENGUAJE DE PROGRAMACIÓN QUE TE REQUIERE UN TERCER LENGUAJE DE PROGRAMACIÓN Y COMO NO LO SUPIERAS DE ANTEMANO IGUAL TIENES QUE HACER BRORRÓN Y CUENTA NUEVA E INSTALAR OTRO SISTEMA OPERATIVO SOLO PARA QUE, UNA VEZ RECIBES 3 O 4 GOTAS DE DOPAMINA POR QUE LOS PRIMEROS COMANDOS SE EJECUTAN CORRECTAMENTE, TE VUELVES A CAER EN EL HOYO DE NO SABER POR DONDE TE LLUEVEN LAS HOSTIAS
+
+# POR QUÉ COJONES SE ME TIENE QUE HACER TAN JODIDAMENTE DIFICIL, POR QUÉ COJONES SOY TAN INÚTIL, POR QUÉ COJONES HA TENIDO QUE JODERSEME EL ORDENADOR 2 VECES DURANTE EL PUTO DESARROLLO DEL CURSO, LAS CLASES ME SUENAN A CHINO Y NO AYUDA EL HECHO DE QUE LAS TENGA QUE HACER A LAS TANTAS DE LA NOCHE Y NO TENGA MÁS QUE UNA SEMANA PARA AVERIGUAR POR QUÉ ME ATASCO HASTA QUE SALGA MÁS PUTO MATERIAL
+
+# En qué berenjenal me he metido, y quien me mandó meterme.

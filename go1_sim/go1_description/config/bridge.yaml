@@ -1,0 +1,22 @@
+# Subscriber Topics
+
+- topic_name: "cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "ignition::msgs::Twist"
+
+# Publisher Topics
+
+- topic_name: "odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition::msgs::Odometry"
+  publisher_queue: 5
+  
+- topic_name: "scan"
+  ros_type_name: "sensor_msgs/msg/LaserScan"
+  gz_type_name: "ignition::msgs::LaserScan"
+  publisher_queue: 1
+  
+ - topic_name: "tf"
+  ros_type_name: "tf2_msgs/msg/TFMessage"
+  gz_type_name: "ignition::msgs::Pose_V"
+  publisher_queue: 6

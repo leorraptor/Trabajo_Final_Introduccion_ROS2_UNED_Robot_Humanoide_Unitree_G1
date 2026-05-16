@@ -369,49 +369,4 @@ Package 'go1_gazebo' not found: "package 'go1_gazebo' not found, searching: ['/o
 
 # Estoy un poco bastante hasta las narices de, o ser tan tonto, o de no entender el material para un curso por el que he pagado 200 pavos (o sea, ser tonto por partida doble)
 
-# Creo que la clave se encuentra en esta sección del README:
-
-## Interface
-
-### Subscribed topics (Topics de los Suscriptores, esencialmente usariamos [ para mensajes de Gazebo a ROS)
-
-**Velocity control interface:**
- The robot simulation is configured to navigate as per velocity commands received on the interface topic.
-- Topic: `/cmd_vel`
-- Message type: [geometry_msgs/Twist](https://docs.ros.org/en/ros2_packages/humble/api/geometry_msgs/interfaces/msg/Twist.html)
-
-
-### Published topics (Topics de los Publicantes, esencialmente usaríamos ] para mensajes de ROS a Gazebo)
-
-**Odometry data:**
-Odometry data from the ground truth plugin
-- Topic: `/odom`
-- Message type: [nav_msgs/Odometry](https://docs.ros.org/en/humble/p/nav_msgs/interfaces/msg/Odometry.html)
-
-
-**2D LiDAR data:**
-2D lidar data from the gazebo sensor plugin
-- Topic: `/scan`
-- Message type: [sensor_msgs/LaserScan](https://docs.ros.org/en/ros2_packages/humble/api/sensor_msgs/interfaces/msg/LaserScan.html)
-
-
-**Transforms:**
-Transforms `odom` -> `base_link` and `base_link` -> `base_footprint` are provided
- - Topic: `/tf`
- - Message type: [tf2_msgs/TFMessage](https://docs.ros2.org/foxy/api/tf2_msgs/msg/TFMessage.html)
- 
-# Ya que aquí se indican los tópicos, y a base de utilizar el comando 'ros2 run ros_gz_bridge parameter_bridge /TOPIC@MENSAJE_ROS@MENSAJE_IGNITION' (como se detalla en la documentación de Gazebo en este enlace: https://gazebosim.org/docs/fortress/ros2_integration/) y quizás un 'echo' para no tener que volver a escribirlos cada vez que se ejecute el programa.
-
-# Por qué estos rodeos en vez de escribitlo y hacer el P*TO TRABAJO?!?!?! Pues es que no me sé el comando de Gazebo con el que hacer el puente. Así que hasta que alguien vuelva a hacer el trabajo por mí supongo que así se queda.
-
 ===================================================================================================================================
-
-# NADA DE ESTO TIENE NINGÚN PUTO SENTIDO PORQUE TENGO TODOS LOS PUTOS PROGRAMAS REDIÓS, DE QUE COÑO VA TODO, POR QUÉ CADA VEZ QUE SOLUCIONO UNA COSA O APRENDO COMO VA, VUELVO AL PROBLEMA ORIGINAL Y ME ENCUENTRO QUE NO SIRVE DE NADA
-
-# LITERALMENTE SE SUPONE QUE SÓLO TENGO QUE SEGUIR LOS PASOS, Ctrl + C POR AQUÍ, Ctrl + V POR ALLÍ, PERO ACABO EN HOYOS INSONDABLES DE LOS QUE APENAS PUEDO SALIR, A PESAR DE QUE SIGO LAS INSTRUCCIONES AL PIÉ DE LA LETRA
-
-# COMO COJONES SE SUPONE QUE LA GENTE TRABAJA CON ESTE SISTEMA OPERATIVO CUANDO TIENES QUE SABERTE UN LENGUAJE DE PROGRAMACIÓN PARA APRENDERTE UN SEGUNDO LENGUAJE DE PROGRAMACIÓN QUE TE REQUIERE UN TERCER LENGUAJE DE PROGRAMACIÓN Y COMO NO LO SUPIERAS DE ANTEMANO IGUAL TIENES QUE HACER BRORRÓN Y CUENTA NUEVA E INSTALAR OTRO SISTEMA OPERATIVO SOLO PARA QUE, UNA VEZ RECIBES 3 O 4 GOTAS DE DOPAMINA POR QUE LOS PRIMEROS COMANDOS SE EJECUTAN CORRECTAMENTE, TE VUELVES A CAER EN EL HOYO DE NO SABER POR DONDE TE LLUEVEN LAS HOSTIAS
-
-# POR QUÉ COJONES SE ME TIENE QUE HACER TAN JODIDAMENTE DIFICIL, POR QUÉ COJONES SOY TAN INÚTIL, POR QUÉ COJONES HA TENIDO QUE JODERSEME EL ORDENADOR 2 VECES DURANTE EL PUTO DESARROLLO DEL CURSO, LAS CLASES ME SUENAN A CHINO Y NO AYUDA EL HECHO DE QUE LAS TENGA QUE HACER A LAS TANTAS DE LA NOCHE Y NO TENGA MÁS QUE UNA SEMANA PARA AVERIGUAR POR QUÉ ME ATASCO HASTA QUE SALGA MÁS PUTO MATERIAL
-
-# En qué berenjenal me he metido, y quien me mandó meterme.

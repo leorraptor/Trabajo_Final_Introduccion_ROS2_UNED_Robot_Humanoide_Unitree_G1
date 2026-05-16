@@ -14,6 +14,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 def generate_launch_description():
     
+    config_path = os.path.join(general_package_dir, 'bridge.yaml')
     world_file_name = LaunchConfiguration('world_file_name')
     urdf_file = LaunchConfiguration('urdf_file')
     
@@ -41,6 +42,17 @@ def generate_launch_description():
             get_package_share_directory('go1_gazebo'), 'launch'),
             '/start_world.launch.py']),
     launch_arguments={'world_file_name': world_file_name}.items(),
+    )
+    
+    # Ejecutamos el nodo para puentear los comandos
+    bridge_node = Node(
+    	package='ros_gz_bridge',
+    	executable='parameter_bridge',
+    	name='parameter_bridge',
+    	output='screen',
+    	parameters=[{
+    		"config_file": config_path
+    	}]
     )
     
     
